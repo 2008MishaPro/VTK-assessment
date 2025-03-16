@@ -1,5 +1,5 @@
 import axios from "axios";
-import { addNewUserToken } from "../localStore/LocalStore";
+import { addNewUserToken, getUserToken } from "../localStore/LocalStore";
 
 interface LoginProps{
     email:string;
@@ -7,7 +7,7 @@ interface LoginProps{
 }
 export const API_URL='http://mbl.vtk-portal.ru/api/v1'
 
-export const GetUserToken= async ({email,password}:LoginProps) =>{
+export const LoginUser= async ({email,password}:LoginProps) =>{
     try{
         const response = await  axios.post(`${API_URL}/auth/login`, {email,password},{
             headers:{
@@ -20,5 +20,21 @@ export const GetUserToken= async ({email,password}:LoginProps) =>{
     catch{
         console.log('Что-то пошло не так!')
         return false
+    }
+}
+
+export const GetUserData = async () =>{
+    try {
+        const token = getUserToken()
+        if(token){
+            const response = await axios.get(`${API_URL}/user/my`,{
+                headers:{
+                    Authorization:`Bearer ${token}`
+                }
+            })
+            return response.data
+        }
+    } catch (error) {
+            return `Произошла ошибка ${error}`
     }
 }

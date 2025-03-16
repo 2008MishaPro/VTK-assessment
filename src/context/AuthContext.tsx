@@ -1,6 +1,6 @@
 import { createContext, useContext, useEffect, useState } from "react";
 import { getUserToken, removeUserToken } from "../localStore/LocalStore";
-import { GetUserToken } from "../API/GetUserLogin";
+import { LoginUser } from "../API/GetUserLogin";
 
 interface AuthProps {
   authState?: { token: string | null; authenticated: boolean | null };
@@ -41,7 +41,7 @@ export const AuthOperator = ({ children }: any) => {
 
   const login = async (email: string, password: string) => {
     try {
-      const result = await GetUserToken({ email, password });
+      const result = await LoginUser({ email, password });
 
       if (result.token) {
         localStorage.setItem("TOKEN", JSON.stringify(result.token)); 
