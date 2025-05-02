@@ -1,28 +1,15 @@
-import {useEffect, useState} from "react";
-import {GetUserData} from "../../../../../API/GetUserLogin.ts";
+import {UserData} from './model'
+import styles from './styles.module.css'
 
 export const UserCard = () =>{
-    const [profileData, setProfileData] = useState({
-        email: "",
-        full_name: "",
-        group_name: "",
-    });
-    useEffect(() => {
-        const showData = async () => {
-            const data = await GetUserData();
-            setProfileData({
-                email: data.email,
-                full_name: data.full_name,
-                group_name: data.group_name,
-            });
-            return data;
-        };
-        showData();
-    }, []);
+    const {profileData} = UserData();
+
     return (
-        <section>
+        <section className={styles.container}>
+            <div className={styles.blankAvatar}>
+                <p>{profileData.full_name}</p>
+            </div>
             <p>{profileData.email}</p>
-            <p>{profileData.full_name}</p>
             <p>{profileData.group_name}</p>
         </section>
         )

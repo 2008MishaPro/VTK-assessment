@@ -1,6 +1,6 @@
 import "./App.css";
 import { BrowserRouter, Route, Routes, Navigate } from "react-router-dom";
-import { Authorization } from "./pages/Authorization";
+import { Authorization } from "./pages/authorization/Authorization.tsx";
 import { AssessmentsPage } from "./pages/(tabs)/AssessmentsPage";
 import { AuthOperator } from "./context/AuthContext";
 import { TabsRoute } from "./pages/TabsRoute";

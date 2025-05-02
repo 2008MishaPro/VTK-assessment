@@ -1,5 +1,3 @@
-import { useEffect, useState } from "react";
-import { GetUserData } from "../../../API/GetUserLogin.ts";
 import {useAuth} from "../../../context/AuthContext.tsx";
 
 import styles from './styles.module.css'
