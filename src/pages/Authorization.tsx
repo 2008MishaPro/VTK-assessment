@@ -12,7 +12,7 @@ export const Authorization = () => {
     e.preventDefault();
     const result = await onLogin!(login.email, login.password);
     if (result) {
-      navigate("/assessments");
+      navigate("/authorized/assessment");
     }
   };
 
@@ -35,7 +35,6 @@ export const Authorization = () => {
           <p>Данные для входа выдаются колледжем</p>
         </div>
         <button onClick={sendLoginData}></button>
-        <button>Выйти</button>
       </form>
     </main>
   );

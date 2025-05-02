@@ -8,17 +8,17 @@ export const TabsRoute = () => {
 
   return (
     <div>
-      {authState?.authenticated ? (
-        <Outlet />
-      ) : (
-        <Navigate to="/authorization" replace />
-      )}
-      
       <nav>
         <Link to="/authorized/profile">Профиль</Link>
         <Link to="/authorized/assessment">Оценки</Link>
         <Link to="/authorized/schedule">Расписание</Link>
       </nav>
+      {authState?.authenticated ? (
+        <Outlet />
+      ) : (
+        <Navigate to="/authorization" replace />
+      )}
+
     </div>
   );
 };
