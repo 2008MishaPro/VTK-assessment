@@ -1,0 +1,29 @@
+.container {
+    display: flex;
+    flex-direction: column;
+    height: 100vh;
+    width: 100vw;
+}
+
+.nav {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    background: #5dfa60;
+    height: 60px;
+    max-width: 100%;
+    padding-inline: 2rem;
+}
+
+.navList {
+    display: flex;
+    flex-direction: row;
+    width: 100%;
+    max-width: 60%;
+    justify-content: space-between;
+}
+
+.logo {
+    max-width: 10%;
+}
