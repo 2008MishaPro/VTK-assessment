@@ -5,7 +5,7 @@ import { AssessmentsPage } from "./pages/(tabs)/AssessmentsPage";
 import { AuthOperator } from "./context/AuthContext";
 import { TabsRoute } from "./pages/TabsRoute";
 import { Index } from "./pages/(tabs)/profile";
-import { SchedulePage } from "./pages/(tabs)/SchedulePage";
+import { SchedulePage } from "./pages/(tabs)/schedule/SchedulePage.tsx";
 
 function App() {
   return (
