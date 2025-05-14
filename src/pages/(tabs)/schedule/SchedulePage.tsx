@@ -1,7 +1,10 @@
 import { useEffect, useState } from 'react';
-import { fetchDataScheduleOnly } from "../../../API/schedule-api/schedule.ts";
-import { Card, Typography, Spin, Alert, Tag, Space, Divider, Row, Col, Timeline, Tabs } from 'antd';
+import { fetchPersonalSchedule } from "../../../API/schedule-api/schedule.ts";
+import { fetchAllData, DataItem } from "../../../API/schedule-api/dropdown-api.ts";
+import { fetchFilteredSchedule } from "../../../API/schedule-api/general-schedule.ts";
+import { Card, Typography, Spin, Alert, Tag, Space, Divider, Row, Col, Timeline, Tabs, Button, Radio } from 'antd';
 import { ClockCircleOutlined, BookOutlined, UserOutlined, HomeOutlined, TeamOutlined, CalendarOutlined } from '@ant-design/icons';
+import Dropdown from '../../../components/dropdown/DropdownSelect';
 
 // Определим типы (оставляем из предыдущего примера для ясности)
 interface ScheduleCall {
@@ -44,29 +47,122 @@ interface WeeklyGroupedSchedule {
   }
 }
 
+// Добавляем тип для режима отображения
+type ViewMode = 'personal' | 'general';
+
 export const SchedulePage = () => {
   const [scheduleData, setScheduleData] = useState<ScheduleData | null>(null);
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
+  
+  // Состояния для режима просмотра и фильтров
+  const [viewMode, setViewMode] = useState<ViewMode>('personal');
+  const [groupData, setGroupData] = useState<DataItem[]>([]);
+  const [cabinetData, setCabinetData] = useState<DataItem[]>([]);
+  const [teacherData, setTeacherData] = useState<DataItem[]>([]);
+  const [selectedGroup, setSelectedGroup] = useState<string | null>();
+  const [selectedCabinet, setSelectedCabinet] = useState<string | null>();
+  const [selectedTeacher, setSelectedTeacher] = useState<string | null>();
 
+  // Загрузка личного расписания
+  const loadPersonalSchedule = async () => {
+    try {
+      setLoading(true);
+      setError(null);
+      const data = await fetchPersonalSchedule();
+      setScheduleData(data);
+    } catch (err) {
+      console.error("Failed to fetch schedule data:", err);
+      setError(err instanceof Error ? err.message : "Произошла ошибка при загрузке расписания");
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  // Загрузка общего расписания с фильтрами
+  const loadGeneralSchedule = async () => {
+    try {
+      setLoading(true);
+      setError(null);
+      const data = await fetchFilteredSchedule(selectedGroup, selectedCabinet, selectedTeacher);
+      setScheduleData(data);
+      console.log("Загружено общее расписание:", data);
+    } catch (err) {
+      console.error("Ошибка при загрузке общего расписания:", err);
+      setError(err instanceof Error ? err.message : "Произошла ошибка при загрузке общего расписания");
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  // Загрузка данных для выпадающих списков
+  const loadDropdownData = async () => {
+    try {
+      const [groups, cabinets, teachers] = await fetchAllData();
+      setGroupData(groups);
+      setCabinetData(cabinets);
+      setTeacherData(teachers);
+      console.log("Загружены данные для выпадающих списков:", { groups, cabinets, teachers });
+    } catch (err) {
+      console.error("Ошибка при загрузке данных для выпадающих списков:", err);
+      setError(err instanceof Error ? err.message : "Произошла ошибка при загрузке данных для выпадающих списков");
+    }
+  };
+
+  // Обработчик изменения значения в выпадающем списке
+  const handleValueChange = (value: string, name: string) => {
+    console.log(`Изменено значение ${name}:`, value);
+    switch (name) {
+      case 'group_id':
+        setSelectedGroup(value);
+        break;
+      case 'cabinet_id':
+        setSelectedCabinet(value);
+        break;
+      case 'teacher_id':
+        setSelectedTeacher(value);
+        break;
+    }
+  };
+
+  // Обработчик переключения режима просмотра
+  const handleViewModeChange = (mode: ViewMode) => {
+    setViewMode(mode);
+    if (mode === 'personal') {
+      loadPersonalSchedule();
+    } else {
+      // При переключении на общий режим, сначала загружаем данные для выпадающих списков
+      loadDropdownData();
+      // Затем загружаем общее расписание без фильтров
+      setSelectedGroup(null);
+      setSelectedCabinet(null);
+      setSelectedTeacher(null);
+      loadGeneralSchedule();
+    }
+  };
+
+  // Обработчик нажатия на кнопку применения фильтров
+  const handleApplyFilters = () => {
+    loadGeneralSchedule();
+  };
+
+  // Обработчик очистки всех фильтров
+  const handleClearAllFilters = () => {
+    setSelectedGroup(null);
+    setSelectedCabinet(null);
+    setSelectedTeacher(null);
+    loadGeneralSchedule();
+  };
+
+  // Загрузка данных при первом рендере
   useEffect(() => {
-    const loadSchedule = async () => {
-      try {
-        setLoading(true);
-        setError(null);
-        const data = await fetchDataScheduleOnly();
-        setScheduleData(data);
-        console.log("Fetched data:", data);
-      } catch (err) {
-        console.error("Failed to fetch schedule data:", err);
-        setError(err instanceof Error ? err.message : "Произошла ошибка при загрузке расписания");
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    loadSchedule();
-  }, []);
+    if (viewMode === 'personal') {
+      loadPersonalSchedule();
+    } else {
+      loadDropdownData();
+      loadGeneralSchedule();
+    }
+  }, []); // Убираем viewMode из зависимостей, чтобы не было циклической загрузки
 
   if (loading) {
     return (
@@ -144,11 +240,78 @@ export const SchedulePage = () => {
     'Воскресенье': 'red'
   };
 
+  // Функция для определения эмодзи в зависимости от количества пар
+  const getMoodEmoji = (entriesCount: number) => {
+    if (entriesCount === 1) return "😊"; // счастливый (1 пара)
+    if (entriesCount === 2) return "🙂"; // нейтральный (2 пары)
+    if (entriesCount === 3) return "😐"; // слегка грустный (3 пары)
+    return "😩"; // очень грустный (4+ пары)
+  };
+
   return (
     <div style={{ padding: '20px', maxWidth: '1000px', margin: '0 auto' }}>
-      <Typography.Title level={1} style={{ textAlign: 'center', marginBottom: '30px' }}>
+      <Typography.Title level={1} style={{ textAlign: 'center', marginBottom: '20px' }}>
         Расписание занятий
       </Typography.Title>
+      
+      {/* Переключатель режима просмотра */}
+      <div style={{ marginBottom: '20px', textAlign: 'center' }}>
+        <Radio.Group 
+          value={viewMode} 
+          onChange={(e) => handleViewModeChange(e.target.value)}
+          buttonStyle="solid"
+        >
+          <Radio.Button value="personal">Моё расписание</Radio.Button>
+          <Radio.Button value="general">Общее расписание</Radio.Button>
+        </Radio.Group>
+      </div>
+      
+      {/* Блок с выпадающими списками для общего расписания */}
+      {viewMode === 'general' && (
+        <Card 
+          style={{ marginBottom: '20px', borderRadius: '8px' }}
+          title="Фильтры расписания"
+        >
+          <Row gutter={[16, 16]}>
+            <Col xs={24} md={8}>
+              <Typography.Text strong>Группа</Typography.Text>
+              <Dropdown
+                dataInfo={groupData}
+                value={selectedGroup}
+                setValue={(value) => handleValueChange(value, 'group_id')}
+                clearDropdownValue={() => setSelectedGroup(null)}
+                placeholder="Выберите группу"
+              />
+            </Col>
+            <Col xs={24} md={8}>
+              <Typography.Text strong>Кабинет</Typography.Text>
+              <Dropdown
+                dataInfo={cabinetData}
+                value={selectedCabinet}
+                setValue={(value) => handleValueChange(value, 'cabinet_id')}
+                clearDropdownValue={() => setSelectedCabinet(null)}
+                placeholder="Выберите кабинет"
+              />
+            </Col>
+            <Col xs={24} md={8}>
+              <Typography.Text strong>Преподаватель</Typography.Text>
+              <Dropdown
+                dataInfo={teacherData}
+                value={selectedTeacher}
+                setValue={(value) => handleValueChange(value, 'teacher_id')}
+                clearDropdownValue={() => setSelectedTeacher(null)}
+                placeholder="Выберите преподавателя"
+              />
+            </Col>
+          </Row>
+          <Row justify="end" style={{ marginTop: '16px' }}>
+            <Space>
+              <Button onClick={handleClearAllFilters}>Сбросить фильтры</Button>
+              <Button type="primary" onClick={handleApplyFilters}>Применить</Button>
+            </Space>
+          </Row>
+        </Card>
+      )}
       
       <Tabs
         type="card"
@@ -177,6 +340,7 @@ export const SchedulePage = () => {
                     <Space>
                       <CalendarOutlined />
                       <Typography.Text strong>{date}</Typography.Text>
+                      <Typography.Text style={{ fontSize: '20px' }}>{getMoodEmoji(entries.length)}</Typography.Text>
                     </Space>
                   </Divider>
                   
