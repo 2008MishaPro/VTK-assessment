@@ -7,6 +7,7 @@ import {VtlLogo} from "../assets/svg";
 export const TabsRoute = () => {
   const { authState, loading, onLogOut } = useAuth();
 
+  const logOut = () => {}
   if (loading) return <div>Загрузка...</div>;
 
   return (

@@ -61,6 +61,7 @@ export const AuthOperator = ({ children }: any) => {
   const logOut = async () => {
     removeUserToken();
     setAuth({ token: null, authenticated: false });
+    console.log(thisAuth)
   };
 
   const value = {
