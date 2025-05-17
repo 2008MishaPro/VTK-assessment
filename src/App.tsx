@@ -1,11 +1,12 @@
 import "./App.css";
 import { BrowserRouter, Route, Routes, Navigate } from "react-router-dom";
 import { Authorization } from "./pages/authorization/Authorization.tsx";
-import { AssessmentsPage } from "./pages/(tabs)/AssessmentsPage";
+
 import { AuthOperator } from "./context/AuthContext";
 import { TabsRoute } from "./pages/TabsRoute";
 import { Index } from "./pages/(tabs)/profile";
 import { SchedulePage } from "./pages/(tabs)/schedule/SchedulePage.tsx";
+import { AssessmentsPage } from "./pages/(tabs)/assessments/AssessmentsPage.tsx";
 
 function App() {
   return (
