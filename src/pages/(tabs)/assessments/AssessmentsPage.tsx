@@ -44,8 +44,8 @@ const getScoreValue = (grade: string): number => {
 export const AssessmentsPage: React.FC = () => {
   // Доступные семестры
   const semesters = [
-    { key: '1-2024', label: '1 семестр 2024' },
-    { key: '2-2025', label: '2 семестр 2025' },
+    { key: '1-2024', label: '1 семестр 2024-2025' },
+    { key: '2-2025', label: '2 семестр 2024-2025' },
   ];
   
   // Состояние для выбранного семестра
@@ -74,13 +74,13 @@ export const AssessmentsPage: React.FC = () => {
   // Определяем колонки таблицы
   const columns: ColumnsType<SubjectData> = [
     {
-      title: 'Предмет',
+      title: 'Наименование дисциплины',
       dataIndex: 'subject',
       key: 'subject',
       render: (text) => <Text strong>{text}</Text>,
     },
     {
-      title: 'Тип',
+      title: 'Форма контроля',
       dataIndex: 'type',
       key: 'type',
       render: (type) => (
@@ -208,7 +208,7 @@ export const AssessmentsPage: React.FC = () => {
             bordered
             title={() => (
               <Title level={4} style={{ margin: 0 }}>
-                Результаты аттестации - {currentSemester}
+                Результаты промежуточной аттестации - {currentSemester}
               </Title>
             )}
             footer={() => (

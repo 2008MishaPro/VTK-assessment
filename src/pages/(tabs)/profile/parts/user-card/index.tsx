@@ -7,7 +7,7 @@ const { Title, Text } = Typography;
 
 export const UserCard = () => {
     const { profileData } = UserData();
-    const groupName = profileData.group_name?.split("-")[0] || '';
+    const groupName = 'ИС';
     
     // Находим информацию о группе
     const groupInfo = info.find(item => item.group === groupName);
@@ -26,7 +26,7 @@ export const UserCard = () => {
     };
 
     return (
-        <Skeleton loading={isLoading} active avatar paragraph={{ rows: 6 }}>
+        <Skeleton loading={false} active avatar paragraph={{ rows: 6 }}>
             <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
                 <Avatar 
                     size={100} 
@@ -44,11 +44,11 @@ export const UserCard = () => {
                 </Avatar>
                 
                 <Title level={4} style={{ margin: '8px 0', textAlign: 'center' }}>
-                    {profileData.full_name}
+                    Бурдин Кирилл Алексеевич
                 </Title>
                 
                 <Space>
-                    <Tag color="blue">{profileData.group_name}</Tag>
+                    <Tag color="blue">ИС 4-1</Tag>
                     <Tag color="green">Студент</Tag>
                 </Space>
             </div>
@@ -62,7 +62,7 @@ export const UserCard = () => {
                         <Text strong>Email:</Text>
                     </Space>
                     <div style={{ marginTop: 4 }}>
-                        <Text>{profileData.email}</Text>
+                        <Text>vktburdin2021000335</Text>
                     </div>
                 </div>
                 
@@ -74,7 +74,7 @@ export const UserCard = () => {
                                 <Text strong>Группа:</Text>
                             </Space>
                             <div style={{ marginTop: 4 }}>
-                                <Text>{profileData.group_name}</Text>
+                                <Text>ИС 4-1</Text>
                             </div>
                         </div>
                         
