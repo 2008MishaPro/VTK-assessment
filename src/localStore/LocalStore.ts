@@ -1,7 +1,4 @@
 
-
-
-
 export const getUserToken = () =>{
     const token = localStorage.getItem("TOKEN")
     return token ? JSON.parse(token):[]
