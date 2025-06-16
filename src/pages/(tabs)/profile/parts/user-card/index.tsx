@@ -44,11 +44,11 @@ export const UserCard = () => {
                 </Avatar>
                 
                 <Title level={4} style={{ margin: '8px 0', textAlign: 'center' }}>
-                    Бурдин Кирилл Алексеевич
+                    Алексеев Виталий Тихонович
                 </Title>
                 
                 <Space>
-                    <Tag color="blue">ИС 4-1</Tag>
+                    <Tag color="blue">ИС 1-1</Tag>
                     <Tag color="green">Студент</Tag>
                 </Space>
             </div>
@@ -62,7 +62,7 @@ export const UserCard = () => {
                         <Text strong>Email:</Text>
                     </Space>
                     <div style={{ marginTop: 4 }}>
-                        <Text>vktburdin2021000335</Text>
+                        <Text>vktvitali2021000335</Text>
                     </div>
                 </div>
                 
@@ -74,7 +74,7 @@ export const UserCard = () => {
                                 <Text strong>Группа:</Text>
                             </Space>
                             <div style={{ marginTop: 4 }}>
-                                <Text>ИС 4-1</Text>
+                                <Text>ИС 1-1</Text>
                             </div>
                         </div>
                         

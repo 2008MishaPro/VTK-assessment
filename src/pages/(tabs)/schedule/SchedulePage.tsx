@@ -391,7 +391,7 @@ export const SchedulePage = () => {
                             <Col xs={24} md={8}>
                               <Typography.Text>
                                 <TeamOutlined style={{ marginRight: '8px' }} />
-                                <strong>Группа:</strong> {scheduleItem.group}
+                                <strong>Группа:</strong> ИС 1-1
                               </Typography.Text>
                             </Col>
                           </Row>
